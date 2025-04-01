@@ -11,34 +11,29 @@ The goal is to provide an API that from a GitHub repository provides a list of r
 
 ## Running
 
-1. Install dependencies using uv.
-```sh
-
-
-```
-
-2. Get a GitHub token.
+1. Get a GitHub token.
 
 Follow the [documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token).
 Once done, set it to your env variables:
 
 ```sh
-export GITHUB_TOKEN="your toekn here"
+export GITHUB_TOKEN="your token here"
 ```
 
 
-3. Start the server
+2. Start the server
 
 ```sh
-
-
+uv run uvicorn src.starneighbours.main:app  --host 0.0.0.0 --port 8080
 ```
 
 
-4. Perform requests
+3. Perform requests
 
 ```
-GET /repos/<user>/<repo>/starneighbours
+curl -X 'GET' \
+  'http://127.0.0.1:8080/api/v1/health' \
+  -H 'accept: application/json'
 ```
 
 
@@ -49,7 +44,12 @@ It gives access to the swagger documentation in `/docs`.
 
 To test, run `pytest .`.
 
-Every merge requests should satisfy `mypy`, `ruff format` and `ruff lint`.
+Every merge requests should satisfy `mypy`, `ruff format` and `ruff check`.
+```sh
+uv run ruff format .
+uv run ruff check .
+uv run mypy .
+```
 
 As we use the MPL2 license, don't forget to add following the header to all "important" files:
 ```
@@ -89,7 +89,7 @@ Architecture:
 ## Roadmap
 
 - [x] Create a basic README
-- [ ] Set-up the structure
+- [x] Set-up the structure
 - [ ] Create a starneighbour service that depends on a github repository.
     The repository can, from a `github_user` and `github_repo`, get the stargazers of that repo.
     The repository can also from a `github_user`, get the repositories that it has starred.

@@ -1,0 +1,53 @@
+[project]
+name = "starneighbours"
+version = "0.1.0"
+description = "Find what stargazers of a repo have also starred. "
+readme = "README.md"
+authors = [
+    { name = "David Glesser", email = "david.glesser@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.12",
+    "mypy>=1.15.0",
+    "pytest>=8.3.5",
+    "ruff>=0.11.2",
+    "uvicorn>=0.34.0",
+]
+
+[project.scripts]
+starneighbours = "starneighbours:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.mypy]
+show_column_numbers = true
+show_error_context = true
+pretty = true
+follow_imports="silent"
+strict = false
+warn_unused_configs = true
+disallow_any_generics = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+no_implicit_reexport = true
+strict_equality = true
+
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "YTT", "B", "DTZ", "T20", "PLE"]
+ignore=[
+    "E501",  # Line too long (X > 88 characters)
+    "F405",  # `X` may be undefined, or defined from star imports. (Betterly done by mypy)
+    "B008",  # Not compatible with Depends
+]
+unfixable = [
+    "T203",  # pprint found
+    "T201",  # `print` found
+]
