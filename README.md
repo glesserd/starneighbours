@@ -29,12 +29,28 @@ uv run uvicorn src.starneighbours.main:app  --host 0.0.0.0 --port 8080
 
 
 3. Perform requests
+
+Go to http://127.0.0.1:8080/docs, or:
 ```sh
 curl -X 'GET' \
   'http://127.0.0.1:8080/api/v1/repos/DigitalCarbonFramework/DigitalCarbonFramework/starneighbours' \
-  -H 'accept: application/json'
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer your-api-token'
 ```
 
+
+## API Token Management
+
+The API requires authentication using a bearer token. Tokens are stored in a SQLite database at `data/api_tokens.db`.
+
+To add a new API token, you can use the following command:
+
+```sh
+uv run python -c "from src.starneighbours.repositories.sqlite_api_token import SQLiteAPITokenRepository ; SQLiteAPITokenRepositor
+y().create('token-name', 'your-secret-token-here')"
+```
+
+Replace `your-secret-token-here` with your desired token, `token-name` with a descriptive name, and optionally add comments.
 
 ## Develop
 
@@ -62,7 +78,7 @@ Architecture:
 **Services**
 - Services encapsulate the business logic of the application.
 - Functions within services follow the naming convention: <entity>_<action>. For example: user_create.
-    - The entity can either represent a highly technical component (e.g., S3) or something easily understood by the app’s users.
+    - The entity can either represent a highly technical component (e.g., S3) or something easily understood by the app's users.
     - The action is a verb, typically one of: get, list, update, create, or delete.
 - A service will manipulate objects declared in models.
 - A service can never dependes on a repository. Use the injection dependency framework of fastAPI to declare the necessity to use a repository.
@@ -106,10 +122,12 @@ Architecture:
     If the githib API returns a `x-ratelimit-reset` header, relay this error and raise an error. Document all of that.
 - [x] Create the `GET /repos/<user>/<repo>/starneighbours` endpoint that uses the starneighbour service.
     Write tests, don't forget to mock GitHub API.
-- [ ] Add auth using a bearer token.
+- [x] Add auth using a bearer token.
     Use an sqlite database, performing SQL request without any ORM.
     Have a `api_tokens` table with `name`, `hashed_token`, `update_at`, `created_at`, `comments`.
     Add to the README a bash on liner to add an hashed token to an existing database.
+- [ ] Use a singleton for the DB, see `dependency-injector`.
+- [ ] Use some salt for the hash.
 - [ ] use OAuth auth. If it make sense to have a piece of frontend, it could reduce the probability of exceeding the rate limit of github API.
 - [ ] Check lint, mypy and tests in the CI.
 - [ ] cache requests and/or paginate results. Technically its a big plus. Ask PO if it can be done.

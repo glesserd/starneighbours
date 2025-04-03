@@ -2,14 +2,17 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 
-from starneighbours.repositories import api
+from .repositories.api import router
+from .auth import get_current_token
+
 
 app = FastAPI(
-    title="StarNeighbours API",
-    description="Find what stargazers of a repo have also starred",
-    version="0.1.0",
+    title="Starneighbours",
+    description="Find what stargazers of a repo have also starred.",
+    version="1.0.0",
 )
 
-app.include_router(api.router, prefix="/api/v1", tags=["repositories"])
+# Include routers
+app.include_router(router, prefix="/api/v1", dependencies=[Depends(get_current_token)])
