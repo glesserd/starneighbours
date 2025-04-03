@@ -66,6 +66,12 @@ uv run ruff check .
 uv run mypy .
 ```
 
+You can calculate the coverage using `coverage`:
+```sh
+uv run coverage run -m pytest
+uv run coverage report -m
+```
+
 As we use the MPL2 license, don't forget to add following the header to all "important" files:
 ```python
 # This Source Code Form is subject to the terms of the Mozilla Public
