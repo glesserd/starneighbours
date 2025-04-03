@@ -30,7 +30,7 @@ uv run uvicorn src.starneighbours.main:app  --host 0.0.0.0 --port 8080
 
 3. Perform requests
 
-```
+```sh
 curl -X 'GET' \
   'http://127.0.0.1:8080/api/v1/health' \
   -H 'accept: application/json'
@@ -52,7 +52,7 @@ uv run mypy .
 ```
 
 As we use the MPL2 license, don't forget to add following the header to all "important" files:
-```
+```python
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -61,7 +61,6 @@ As we use the MPL2 license, don't forget to add following the header to all "imp
 Architecture:
 
 **Services**
-
 - Services encapsulate the business logic of the application.
 - Functions within services follow the naming convention: <entity>_<action>. For example: user_create.
     - The entity can either represent a highly technical component (e.g., S3) or something easily understood by the app’s users.
@@ -69,13 +68,11 @@ Architecture:
 - A service will manipulate objects declared in models.
 - A service can never dependes on a repository. Use the injection dependency framework of fastAPI to declare the necessity to use a repository.
 
-
 **Repositories**
 - Repositories handle communication with external systems such as databases or APIs.
 - Public methods only handle basic python types or types declared in models
 - Repositories implement classes declared in models.
 - A repository cannot depends on a service.
-
 
 **Models**
 - Define the basic data manipulated by the APP
@@ -84,13 +81,11 @@ Architecture:
 
 
 
-
-
 ## Roadmap
 
 - [x] Create a basic README
 - [x] Set-up the structure
-- [ ] Create a starneighbour service that depends on a github repository.
+- [x] Create a starneighbour service that depends on a github repository.
     The repository can, from a `github_user` and `github_repo`, get the stargazers of that repo.
     The repository can also from a `github_user`, get the repositories that it has starred.
     The starneighbour service returns the list of neighbours repositories, meaning repositories where at least one stargazer is found in common.
@@ -110,13 +105,11 @@ Architecture:
     When writing tests, don't forget to mock the github API.
     Be careful, the github API endpoints might returns error or unexpected data.
     If the githib API returns a `x-ratelimit-reset` header, relay this error and raise an error. Document all of that.
-- [ ] Create the `GET /repos/<user>/<repo>/starneighbours` endpoints that uses the starneighbour service.
+- [ ] Create the `GET /repos/<user>/<repo>/starneighbours` endpoint that uses the starneighbour service.
     Write tests, don't forget to mock GitHub API.
 - [ ] Add auth using a bearer token.
     Use an sqlite database, performing SQL request without any ORM.
     Have a `api_tokens` table with `name`, `hashed_token`, `update_at`, `created_at`, `comments`.
     Add to the README a bash on liner to add an hashed token to an existing database.
 - [ ] Add the possible next steps to the roadmap.
-
-
 
