@@ -1,4 +1,4 @@
-# starneighbours
+# Starneighbours
 
 Find what stargazers of a repo have also starred.
 
@@ -6,7 +6,7 @@ Find what stargazers of a repo have also starred.
 
 ## About the project
 
-The goal is to provide an API that from a GitHub repository provides a list of repositories that are starred by at least one people in common.
+The goal is to provide an API that, from a GitHub repository, lists other GitHub repositories that are starred by at least one people in common.
 
 
 ## Running
@@ -20,42 +20,34 @@ Once done, set it to your env variables:
 export GITHUB_TOKEN="your token here"
 ```
 
+2. Create a token for the server.
 
-2. Start the server
+```sh
+uv run python -c "from src.starneighbours.repositories.sqlite_api_token import SQLiteAPITokenRepository ; SQLiteAPITokenRepositor
+y().create('token-name', 'your-secret-token-here')"
+```
+Replace `your-secret-token-here` with your desired token, `token-name` with a descriptive name, and optionally add comments.
+
+
+3. Start the server
 
 ```sh
 uv run uvicorn src.starneighbours.main:app  --host 0.0.0.0 --port 8080
 ```
 
-
-3. Perform requests
+4. Perform requests
 
 Go to http://127.0.0.1:8080/docs, or:
 ```sh
 curl -X 'GET' \
   'http://127.0.0.1:8080/api/v1/repos/DigitalCarbonFramework/DigitalCarbonFramework/starneighbours' \
   -H 'accept: application/json' \
-  -H 'Authorization: Bearer your-api-token'
+  -H 'Authorization: Bearer your-secret-token-here'
 ```
 
 
-## API Token Management
-
-The API requires authentication using a bearer token. Tokens are stored in a SQLite database at `data/api_tokens.db`.
-
-To add a new API token, you can use the following command:
-
-```sh
-uv run python -c "from src.starneighbours.repositories.sqlite_api_token import SQLiteAPITokenRepository ; SQLiteAPITokenRepositor
-y().create('token-name', 'your-secret-token-here')"
-```
-
-Replace `your-secret-token-here` with your desired token, `token-name` with a descriptive name, and optionally add comments.
 
 ## Develop
-
-You can start the server in debug mode by setting the `DEBUG` env variable.
-It gives access to the swagger documentation in `/docs`.
 
 To test, run `pytest .`.
 
@@ -142,3 +134,4 @@ Architecture:
 - [ ] check json data returned by api. 
 - [ ] use a real dependency injection lib, like `dependency-injector`.
 - [ ] centralized settings that reads env variables.
+- [ ] forbid the access to `/docs` in prod
