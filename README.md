@@ -13,7 +13,7 @@ The goal is to provide an API that from a GitHub repository provides a list of r
 
 1. Get a GitHub token.
 
-Follow the [documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token).
+Follow the [documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token). No rights required.
 Once done, set it to your env variables:
 
 ```sh
@@ -29,10 +29,9 @@ uv run uvicorn src.starneighbours.main:app  --host 0.0.0.0 --port 8080
 
 
 3. Perform requests
-
 ```sh
 curl -X 'GET' \
-  'http://127.0.0.1:8080/api/v1/health' \
+  'http://127.0.0.1:8080/api/v1/repos/DigitalCarbonFramework/DigitalCarbonFramework/starneighbours' \
   -H 'accept: application/json'
 ```
 
@@ -105,11 +104,17 @@ Architecture:
     When writing tests, don't forget to mock the github API.
     Be careful, the github API endpoints might returns error or unexpected data.
     If the githib API returns a `x-ratelimit-reset` header, relay this error and raise an error. Document all of that.
-- [ ] Create the `GET /repos/<user>/<repo>/starneighbours` endpoint that uses the starneighbour service.
+- [x] Create the `GET /repos/<user>/<repo>/starneighbours` endpoint that uses the starneighbour service.
     Write tests, don't forget to mock GitHub API.
 - [ ] Add auth using a bearer token.
     Use an sqlite database, performing SQL request without any ORM.
     Have a `api_tokens` table with `name`, `hashed_token`, `update_at`, `created_at`, `comments`.
     Add to the README a bash on liner to add an hashed token to an existing database.
-- [ ] Add the possible next steps to the roadmap.
-
+- [ ] use OAuth auth. If it make sense to have a piece of frontend, it could reduce the probability of exceeding the rate limit of github API.
+- [ ] Check lint, mypy and tests in the CI.
+- [ ] cache requests and/or paginate results. Technically its a big plus. Ask PO if it can be done.
+- [ ] add sorting by proximity and alphanumeric.
+- [ ] manage nicely exceptions and errors. Use a tool like Sentry and manage mre nicely errors (eg. timeout).
+- [ ] check json data returned by api. 
+- [ ] use a real dependency injection lib, like `dependency-injector`.
+- [ ] centralized settings that reads env variables.

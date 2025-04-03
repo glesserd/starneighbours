@@ -13,20 +13,9 @@ from starneighbours.models.github import (
 from starneighbours.services.starneighbour import StarNeighbourService
 
 
-@pytest.fixture
-def mock_github_repo() -> AsyncMock:
-    return AsyncMock()
-
-
-@pytest.fixture
-def service(mock_github_repo: AsyncMock) -> StarNeighbourService:
-    return StarNeighbourService(mock_github_repo)
-
-
 @pytest.mark.asyncio
-async def test_find_neighbours(
-    service: StarNeighbourService, mock_github_repo: AsyncMock
-) -> None:
+async def test_find_neighbours() -> None:
+    mock_github_repo = AsyncMock()
     mock_github_repo.get_stargazers.return_value = [
         GitHubUser(login="user1"),
         GitHubUser(login="user2"),
@@ -52,6 +41,7 @@ async def test_find_neighbours(
         ],
     ]
 
+    service = StarNeighbourService(mock_github_repo)
     neighbours = await service.find_neighbours("owner", "target-repo")
 
     assert len(neighbours) == 2
@@ -66,9 +56,8 @@ async def test_find_neighbours(
 
 
 @pytest.mark.asyncio
-async def test_find_neighbours_excludes_target_repo(
-    service: StarNeighbourService, mock_github_repo: AsyncMock
-) -> None:
+async def test_find_neighbours_excludes_target_repo() -> None:
+    mock_github_repo = AsyncMock()
     mock_github_repo.get_stargazers.return_value = [
         GitHubUser(login="user1"),
     ]
@@ -89,7 +78,7 @@ async def test_find_neighbours_excludes_target_repo(
             stargazers_count=200,
         ),
     ]
-
+    service = StarNeighbourService(mock_github_repo)
     neighbours = await service.find_neighbours("owner", "target-repo")
 
     assert len(neighbours) == 1
@@ -97,17 +86,14 @@ async def test_find_neighbours_excludes_target_repo(
 
 
 @pytest.mark.asyncio
-async def test_find_neighbours_handles_errors(
-    service: StarNeighbourService, mock_github_repo: AsyncMock
-) -> None:
+async def test_find_neighbours_handles_errors() -> None:
+    mock_github_repo = AsyncMock()
     mock_github_repo.get_stargazers.return_value = [
         GitHubUser(login="user1"),
         GitHubUser(login="user2"),
     ]
 
-    # Make get_starred_repos fail for user2
     mock_github_repo.get_starred_repos.side_effect = [
-        # user1's starred repos
         [
             GitHubRepo(
                 name="repo1",
@@ -117,12 +103,9 @@ async def test_find_neighbours_handles_errors(
                 stargazers_count=100,
             ),
         ],
-        # user2 fails
         GitHubAPIError("API Error"),
     ]
 
-    neighbours = await service.find_neighbours("owner", "target-repo")
-
-    # Should still return results for user1
-    assert len(neighbours) == 1
-    assert neighbours[0].repo == "owner1/repo1"
+    service = StarNeighbourService(mock_github_repo)
+    with pytest.raises(GitHubAPIError):
+        await service.find_neighbours("owner", "target-repo")

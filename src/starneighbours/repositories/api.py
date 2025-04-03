@@ -3,7 +3,12 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 from fastapi import APIRouter, Depends, HTTPException
-from starneighbours.models.github import GitHubRepository, StarNeighbour, GitHubAPIError, RateLimitError
+from starneighbours.models.github import (
+    GitHubRepository,
+    StarNeighbour,
+    GitHubAPIError,
+    RateLimitError,
+)
 from starneighbours.services.starneighbour import StarNeighbourService
 from starneighbours.repositories.github import GitHubAPIRepository
 
@@ -45,9 +50,9 @@ async def get_starneighbours(
         raise HTTPException(
             status_code=429,
             detail=f"GitHub API rate limit exceeded. Reset at {e.reset_time}",
-        )
+        ) from e
     except GitHubAPIError as e:
         raise HTTPException(
             status_code=500,
             detail="Error fetching data from GitHub API",
-        )
+        ) from e
