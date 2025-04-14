@@ -6,7 +6,6 @@ import hashlib
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
 
 from ..models.api_token import APIToken, APITokenRepository
 
@@ -33,7 +32,7 @@ class SQLiteAPITokenRepository(APITokenRepository):
             """)
             conn.commit()
 
-    def get_by_token(self, token: str) -> Optional[APIToken]:
+    def get_by_token(self, token: str) -> APIToken | None:
         """Get an API token by its hashed value."""
         hashed_token = hashlib.sha256(token.encode()).hexdigest()
 

@@ -23,8 +23,7 @@ export GITHUB_TOKEN="your token here"
 2. Create a token for the server.
 
 ```sh
-uv run python -c "from src.starneighbours.repositories.sqlite_api_token import SQLiteAPITokenRepository ; SQLiteAPITokenRepositor
-y().create('token-name', 'your-secret-token-here')"
+uv run python -c "from src.starneighbours.repositories.sqlite_api_token import SQLiteAPITokenRepository ; SQLiteAPITokenRepository().create('token-name', 'your-secret-token-here')"
 ```
 Replace `your-secret-token-here` with your desired token, `token-name` with a descriptive name, and optionally add comments.
 

@@ -4,7 +4,6 @@
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, Optional
 
 
 @dataclass
@@ -16,7 +15,7 @@ class GitHubUser:
 class GitHubRepo:
     name: str
     full_name: str
-    description: Optional[str]
+    description: str | None
     html_url: str
     stargazers_count: int
 
@@ -24,7 +23,7 @@ class GitHubRepo:
 @dataclass
 class StarNeighbour:
     repo: str
-    stargazers: List[GitHubUser]
+    stargazers: list[GitHubUser]
 
 
 class GitHubAPIError(Exception):
@@ -43,7 +42,7 @@ class RateLimitError(Exception):
 
 class GitHubRepository(ABC):
     @abstractmethod
-    async def get_stargazers(self, user: str, repo: str) -> List[GitHubUser]:
+    async def get_stargazers(self, user: str, repo: str) -> list[GitHubUser]:
         """Get all stargazers of a repository.
 
         Args:
@@ -60,7 +59,7 @@ class GitHubRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_starred_repos(self, user: str) -> List[GitHubRepo]:
+    async def get_starred_repos(self, user: str) -> list[GitHubRepo]:
         """Get all repositories starred by a user.
 
         Args:

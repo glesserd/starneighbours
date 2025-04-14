@@ -3,7 +3,6 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 from collections import defaultdict
-from typing import List
 from ..models.github import GitHubRepository, StarNeighbour
 
 
@@ -11,7 +10,7 @@ class StarNeighbourService:
     def __init__(self, github_repo: GitHubRepository):
         self.github_repo = github_repo
 
-    async def find_neighbours(self, user: str, repo: str) -> List[StarNeighbour]:
+    async def find_neighbours(self, user: str, repo: str) -> list[StarNeighbour]:
         """Find repositories that share stargazers with the given repository.
 
         Args:
